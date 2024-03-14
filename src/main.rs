@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::io::{self, Write};
-use indicatif::{ProgressBar, ProgressStyle};
+use log::{info, warn};
 
 use anyhow::{Context, Result};
 use clap::Parser;
@@ -16,19 +16,28 @@ struct Cli {
 fn main() -> Result<()> {
     let stdout = io::stdout();
     let mut handle = io::BufWriter::new(stdout.lock());
+    env_logger::init();
 
     let args = Cli::parse();
 
+    info!("Looking for {:?} file...", &args.path);
     let content =
         File::open(&args.path).with_context(|| format!("Could not read file {:?}", &args.path))?;
     let lines = BufReader::new(content).lines();
 
+    let mut n = 0;    
     for line in lines {
         let real_line = line.unwrap();
         if real_line.contains(&args.pattern) {
             writeln!(handle, "{}", real_line)?;
+            n += 1;
         }
     }
+
+    if n == 0 {
+        warn!("No lines found containing the pattern {:?} in file {:?}", &args.pattern, &args.path);
+    }
+    
 
     Ok(())
 }
