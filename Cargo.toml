@@ -6,3 +6,6 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 clap = { version = "4.0", features = ["derive"] }
+indicatif = "0.17.8"
+once_cell = "1.19.0"
+rand = "0.8.5"

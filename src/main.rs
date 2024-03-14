@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::io::{self, Write};
+use indicatif::{ProgressBar, ProgressStyle};
 
 use anyhow::{Context, Result};
 use clap::Parser;
